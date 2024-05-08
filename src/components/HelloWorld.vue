@@ -4,9 +4,9 @@
     <p>
       I'M A Full Stack DEVELOPER.
     </p>
-    <h3>Trying to help makind one innovation at a time.</h3>
+    <h3>Trying to help mankind one innovation at a time.</h3>
 
-    <h4> Visitors {{ visitor_count }} </h4>
+    <h4 v-if="visitor_count"> You are visitor no.  {{ visitor_count }} </h4>
   </div>
 </template>
 
@@ -27,13 +27,13 @@ import { supabase } from '../lib/supabase'
 // Create a function to handle inserts
 const handleInserts = (payload) => {
   console.log('Change received!', payload)
-
+  visitor_count.value = payload.new.visitor_count;
 }
 
 // Listen to inserts
 supabase
   .channel('visitor_count')
-  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'visitor_count' }, handleInserts)
+  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'visitor_count' }, handleInserts)
   .subscribe()
 
   
@@ -41,17 +41,18 @@ const visitor_count = ref('')
 const props = defineProps({
   msg: String
 })
-// async function getCounter() {
-//   const { data } = await supabase.from('visitor_count').select()
-//   visitor_count.value = data
-// }
-
-async function increaseCounter() {
-  await supabase.from('visitor_count').insert(visitor_count.value+1)
+async function getCounter() {
+  const { data } = await supabase.from('visitor_count').select('visitor_count')
+  visitor_count.value = data[0].visitor_count ?? '';
 }
 
-onMounted(() => {
-  increaseCounter()
+async function increaseCounter() {
+  await supabase.from('visitor_count').update({ visitor_count: Number(visitor_count.value) + 1 }).eq('id', 1)
+}
+
+onMounted(async () => {
+  await getCounter()
+  await increaseCounter()
 })
 </script>
 

@@ -1,3 +1,3 @@
 import { createClient } from '@supabase/supabase-js'
-import { config } from '../../config';
-export const supabase = createClient(config.URL, config.MY_KEY)
+
+export const supabase = createClient(process.env.VUE_APP_URL, process.env.VUE_APP_MY_KEY)
