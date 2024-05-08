@@ -6,53 +6,13 @@
     </p>
     <h3>Trying to help mankind one innovation at a time.</h3>
 
-    <h4 v-if="visitor_count"> You are visitor no.  {{ visitor_count }} </h4>
   </div>
 </template>
 
 <script setup>
-// export default {
-//   name: 'HelloWorld',
-//   props: {
-//     msg: String
-//   },
-//   data:{
-//     visitor_count: 0
-//   }
-// }
-import { ref, onMounted,defineProps } from 'vue'
-import { supabase } from '../lib/supabase'
-// Initialize the JS client
-
-// Create a function to handle inserts
-const handleInserts = (payload) => {
-  console.log('Change received!', payload)
-  visitor_count.value = payload.new.visitor_count;
-}
-
-// Listen to inserts
-supabase
-  .channel('visitor_count')
-  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'visitor_count' }, handleInserts)
-  .subscribe()
-
-  
-const visitor_count = ref('')
+import { defineProps } from 'vue'
 const props = defineProps({
   msg: String
-})
-async function getCounter() {
-  const { data } = await supabase.from('visitor_count').select('visitor_count')
-  visitor_count.value = data[0].visitor_count ?? '';
-}
-
-async function increaseCounter() {
-  await supabase.from('visitor_count').update({ visitor_count: Number(visitor_count.value) + 1 }).eq('id', 1)
-}
-
-onMounted(async () => {
-  await getCounter()
-  await increaseCounter()
 })
 </script>
 
