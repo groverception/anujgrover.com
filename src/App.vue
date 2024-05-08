@@ -1,10 +1,11 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.jpg">
+  <img alt="Anuj's Photograph, He is standing with a camera in kashmir" src="./assets/logo.jpg">
   <HelloWorld msg="I AM ANUJ GROVER"/>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+
 
 export default {
   name: 'App',
